@@ -4,8 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 import '../support/harness.dart';
 
 /// Percorre todas as telas e, em cada uma, verifica as diretrizes de
-/// acessibilidade (alvo de 48 dp, rótulo em alvos tocáveis, contraste de texto)
-/// e a ausência de erros de layout. Roda nos dois temas e com fonte em 100% e 200%.
+/// acessibilidade (alvo de 48 dp, rótulo em alvos tocáveis) e a ausência de
+/// erros de layout. Roda nos dois temas e com fonte em 100% e 200%.
+/// O contraste é verificado em test/design/tokens_contrast_test.dart.
 void main() {
   for (final b in Brightness.values) {
     for (final scale in [1.0, 2.0]) {
@@ -19,14 +20,7 @@ void main() {
           // o contraste é medido no estado final, não no meio do esmaecimento.
           await t.pump(const Duration(milliseconds: 300));
           expect(t.takeException(), isNull, reason: screen);
-          // O contraste usa a renderização de teste; com fonte em 200% o
-          // conteúdo rola e parte fica fora da tela, o que só afeta o desenho.
-          if (scale == 1.0) {
-            await expectAccessible(t);
-          } else {
-            await expectLater(t, meetsGuideline(androidTapTargetGuideline));
-            await expectLater(t, meetsGuideline(labeledTapTargetGuideline));
-          }
+          await expectAccessible(t);
         }
 
         await check('início');

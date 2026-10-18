@@ -102,8 +102,13 @@ List<String> captureClipboard(WidgetTester t) {
 }
 
 /// Verifica as diretrizes de acessibilidade do Flutter na tela atual.
+///
+/// O contraste NÃO é medido aqui. O `textContrastGuideline` mede pixels
+/// renderizados, e a suavização das letras muda entre sistemas: o mesmo texto
+/// (cor nominal 4,9:1) mediu 4,9 no Windows e 1,3 no Linux do CI. O contraste
+/// é garantido em test/design/tokens_contrast_test.dart, que aplica a fórmula
+/// WCAG às cores dos tokens nos dois temas.
 Future<void> expectAccessible(WidgetTester t) async {
   await expectLater(t, meetsGuideline(androidTapTargetGuideline));
   await expectLater(t, meetsGuideline(labeledTapTargetGuideline));
-  await expectLater(t, meetsGuideline(textContrastGuideline));
 }
