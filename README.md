@@ -9,6 +9,10 @@ Aplicativo de conversas temporárias, sem cadastro, com criptografia de ponta a 
 - [docs/revisao-seguranca.md](docs/revisao-seguranca.md): revisão do protótipo e arquitetura criptográfica proposta
 - [docs/decisoes/decisoes-pendentes.md](docs/decisoes/decisoes-pendentes.md): decisões D1–D16 aguardando aprovação
 - [docs/modelo-de-ameacas.md](docs/modelo-de-ameacas.md): ameaças, mitigações e riscos residuais
+- [docs/juridico.md](docs/juridico.md): pendências jurídicas e perguntas para advogado(a) (nenhuma resolvida)
+- [docs/licencas-terceiros.md](docs/licencas-terceiros.md): licenças das dependências e obrigações de atribuição
+- [docs/privacidade.md](docs/privacidade.md) e [docs/termos-de-uso.md](docs/termos-de-uso.md): rascunhos, não publicados
+- [docs/operacao.md](docs/operacao.md): denúncias, conteúdo ilegal e pedidos de autoridades (rascunho)
 
 ## Estrutura
 
