@@ -29,6 +29,18 @@ jobs:
           channel: stable
           flutter-version: 3.47.0
           cache: true
+      - uses: actions/setup-go@v7.0.0
+        with:
+          go-version-file: server/go.mod
+          cache: false
+      - name: Rust (versão fixada em rust/rust-toolchain.toml)
+        working-directory: app/rust
+        run: rustup show active-toolchain || rustup toolchain install
+      - name: Android NDK r30 (o mesmo do app)
+        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;30.0.16248370" > /dev/null
+      - name: biblioteca nativa para os testes no PC
+        working-directory: app/rust
+        run: cargo build --release --locked
       - run: flutter pub get --enforce-lockfile
       - run: dart format --output=none --set-exit-if-changed lib test
       - run: flutter analyze --fatal-infos
@@ -44,6 +56,23 @@ jobs:
           flutter build apk --release -t test/demo/main_demo.dart
           sh ../tools/check_release_apk.sh --expect build/app/outputs/flutter-apk/app-release.apk
           sh ../tools/check_release_apk.sh /tmp/release.apk
+
+  core:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app/rust
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - run: rustup show active-toolchain || rustup toolchain install
+      - run: rustup component add rustfmt clippy
+      - run: cargo fmt --check
+      - run: cargo clippy --release --all-targets --locked -- -D warnings
+      - run: cargo test --release --locked
+      - name: avisos de segurança das dependências (RustSec)
+        run: |
+          cargo install cargo-audit --version 0.22.2 --locked
+          cargo audit
 
   server:
     runs-on: ubuntu-latest

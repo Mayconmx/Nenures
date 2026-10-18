@@ -69,6 +69,12 @@ Consequências para as decisões:
 - A política `PURE_CIPHERTEXT_WIRE_FORMAT_POLICY` funciona também para a proposta de saída (`leave_group`).
 - O OpenMLS teve 5 avisos de segurança entre 09/2025 e 10/2026; a versão 0.9.1 inclui as correções. Acompanhar novos avisos é obrigatório (CI com `cargo audit`, Fase 5).
 
+## Atualização da Fase 5 (18/10/2026)
+
+- **S1 no app:** o app Android (build profile, x86_64) carregou a biblioteca `nenures_core`, gerou a chave, criou a sala no servidor local e conversou nos dois sentidos com um cliente no PC. A captura de tela saiu preta (`FLAG_SECURE`). Ainda falta aparelho ARM físico.
+- **S5 medido:** APK de release por arquitetura, antes → depois do Rust: arm64-v8a 15,8 → 19,6 MB (+3,8); armeabi-v7a 12,9 → 16,3 MB (+3,4); x86_64 17,1 → 21,4 MB (+4,3).
+- **Achado:** cópia adulterada recebida antes da verdadeira faz a verdadeira falhar também (registrado em modelo-de-ameacas.md, T5).
+
 ## Conclusão
 
 A decisão D1 se sustenta: o OpenMLS compila para Android, roda dentro do Android e implementa todos os comportamentos de protocolo que o projeto precisa, sem gravar nada em disco. Ficam pendentes para a Fase 5: vetores oficiais (S2), tamanho real do APK (S5) e medição em aparelho ARM (S1 em ARM, S6).

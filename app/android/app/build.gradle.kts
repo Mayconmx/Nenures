@@ -7,7 +7,8 @@ plugins {
 android {
     namespace = "app.nenures.nenures"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    // NDK r30 LTS: o mesmo usado para compilar a biblioteca Rust (nenures_core).
+    ndkVersion = "30.0.16248370"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17

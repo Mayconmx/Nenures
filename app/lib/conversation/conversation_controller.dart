@@ -7,12 +7,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../design/tokens.dart';
 import 'conversation_state.dart';
 import 'invite.dart';
+import 'real_transport.dart';
 import 'transport.dart';
 
-/// Transporte usado pelo app. No build de hoje é [UnavailableTransport];
-/// os testes substituem por um transporte falso.
+/// Endereço do servidor, definido na compilação:
+/// `--dart-define=NENURES_SERVER=wss://exemplo/v1`.
+const serverAddress = String.fromEnvironment('NENURES_SERVER');
+
+/// Transporte usado pelo app. Sem servidor configurado, o app não finge
+/// funcionar: usa [UnavailableTransport]. Os testes injetam um transporte falso.
 final transportProvider = Provider<ConversationTransport>(
-  (ref) => UnavailableTransport(),
+  (ref) => serverAddress.isEmpty
+      ? UnavailableTransport()
+      : RealTransport(Uri.parse(serverAddress)),
 );
 
 final conversationProvider =
@@ -28,6 +35,9 @@ enum JoinError {
   notFound,
   full,
   locked,
+  invalidWords,
+  noAnswer,
+  tryLater,
   unavailable,
   network,
 }
@@ -129,6 +139,9 @@ class ConversationController extends Notifier<ConversationState> {
         JoinFailure.notFound => JoinError.notFound,
         JoinFailure.full => JoinError.full,
         JoinFailure.locked => JoinError.locked,
+        JoinFailure.invalidWords => JoinError.invalidWords,
+        JoinFailure.noAnswer => JoinError.noAnswer,
+        JoinFailure.tryLater => JoinError.tryLater,
       };
     } on TransportException catch (e) {
       state = const Idle();

@@ -2,12 +2,15 @@
 
 Aplicativo de conversas temporárias, sem cadastro, com criptografia de ponta a ponta.
 
-**Estado: Fase 2 (estrutura e telas).** Ainda não há criptografia nem servidor de salas. Nenhuma garantia de segurança deve ser presumida.
+**Estado: Fase 5 (integração criptográfica).** O app conversa com criptografia MLS (OpenMLS) por um servidor de retransmissão, em ambiente local. Ainda não houve revisão de segurança externa (D2): nenhuma garantia de segurança deve ser presumida.
 
 ## Documentos
 
 - [docs/revisao-seguranca.md](docs/revisao-seguranca.md): revisão do protótipo e arquitetura criptográfica proposta
-- [docs/decisoes/decisoes-pendentes.md](docs/decisoes/decisoes-pendentes.md): decisões D1–D16 aguardando aprovação
+- [docs/arquitetura.md](docs/arquitetura.md): componentes, fluxos e testes por camada
+- [docs/protocolo.md](docs/protocolo.md): protocolo entre app e servidor (v1)
+- [docs/decisoes/decisoes-pendentes.md](docs/decisoes/decisoes-pendentes.md): decisões D1–D17 (D1–D14 e D17 aprovadas; D15 e D16 pendentes)
+- [docs/decisoes/spike-openmls.md](docs/decisoes/spike-openmls.md): evidências do OpenMLS no Android
 - [docs/modelo-de-ameacas.md](docs/modelo-de-ameacas.md): ameaças, mitigações e riscos residuais
 - [docs/juridico.md](docs/juridico.md): pendências jurídicas e perguntas para advogado(a) (nenhuma resolvida)
 - [docs/licencas-terceiros.md](docs/licencas-terceiros.md): licenças das dependências e obrigações de atribuição
@@ -19,6 +22,7 @@ Aplicativo de conversas temporárias, sem cadastro, com criptografia de ponta a 
 ```text
 app/      aplicativo Flutter (Android primeiro)
 server/   retransmissor em Go (AGPL-3.0)
+app/rust/ biblioteca nenures_core (MLS + convite), ligada ao Flutter pelo flutter_rust_bridge
 docs/     documentação técnica, decisões e ameaças
 tools/    scripts de verificação usados no CI
 tests/    integração e vetores (a partir da Fase 4)
@@ -31,6 +35,9 @@ tests/    integração e vetores (a partir da Fase 4)
 | Flutter (stable) | 3.47.0 (Dart 3.13.0) |
 | Go | 1.27.0 |
 | JDK | Temurin 17 |
+| Rust | 1.99.0 (fixado em `app/rust/rust-toolchain.toml`) |
+| Android NDK | r30 LTS (30.0.16248370) |
+| flutter_rust_bridge_codegen | 2.13.0 (só para regerar a ponte) |
 | Android SDK | via `flutter doctor` |
 
 ## Comandos
@@ -58,10 +65,23 @@ sh tools/check_forbidden_deps.sh app/pubspec.lock
 sh tools/check_release_apk.sh app/build/app/outputs/flutter-apk/app-release.apk
 ```
 
-## Demonstração local
+## Conversa real em ambiente local
 
-O app de release ainda não conversa: a criptografia e o servidor dependem das decisões D1–D14.
-Para navegar pelas telas com um transporte **falso** (sem rede, sem criptografia, só para desenvolvimento):
+```sh
+# 1. servidor
+cd server && NENURES_ADDR=127.0.0.1:8080 go run ./cmd/nenures-server
+
+# 2. app no emulador apontando para o PC (10.0.2.2 é o PC visto do emulador)
+cd app && flutter run --profile --dart-define=NENURES_SERVER=ws://10.0.2.2:8080/v1
+```
+
+Sem `NENURES_SERVER`, o app não conversa e avisa isso na tela. O release só aceita `wss://`.
+
+Testes que usam a biblioteca Rust no PC precisam dela compilada antes: `cd app/rust && cargo build --release`.
+
+## Demonstração com transporte falso
+
+Para navegar pelas telas sem rede nem criptografia (só desenvolvimento):
 
 ```sh
 cd app

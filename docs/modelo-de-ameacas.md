@@ -66,6 +66,7 @@ Probabilidade: baixa / média / alta (qualitativa). Impacto: baixo / médio / al
 - **Mitigação:** AEAD e assinatura por folha do MLS; rejeição de mensagens adulteradas.
 - **Teste:** inverter bits em mensagens e commits; o cliente rejeita e não exibe.
 - **Residual:** descarte seletivo não é detectado de forma confiável na v1 (não há confirmação de leitura nem numeração global visível).
+- **Achado (18/10/2026, teste `adulterada_repetida_e_texto_longo` em app/rust/tests/core.rs):** se uma cópia adulterada de uma mensagem chega antes da verdadeira, o OpenMLS consome a chave daquela geração e a verdadeira também é rejeitada. Só quem está no caminho da rede (o servidor) consegue fazer isso, e ele já pode descartar mensagens; o efeito é o mesmo de um descarte. As mensagens seguintes continuam funcionando.
 
 ### T6 — Entrada indevida em salas
 - **Cenário:** adivinhar convites, forçar entrada em sala ativa, criar entrada sem que os outros percebam.

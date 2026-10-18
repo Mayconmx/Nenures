@@ -74,6 +74,15 @@ enum JoinFailure {
 
   /// Entrada trancada por um participante (D7).
   locked,
+
+  /// Alguma palavra não existe na lista (D5).
+  invalidWords,
+
+  /// Ninguém na conversa respondeu ao pedido a tempo.
+  noAnswer,
+
+  /// Servidor ocupado ou limite de tentativas atingido.
+  tryLater,
 }
 
 class JoinException implements Exception {

@@ -29,6 +29,12 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
       'Chave não encontrada ou expirada. Peça uma nova para quem te convidou.',
     JoinError.full => 'Esta conversa está cheia.',
     JoinError.locked => 'A entrada nesta conversa foi trancada.',
+    JoinError.invalidWords =>
+      'Alguma palavra não existe na lista. Confira a chave letra por letra.',
+    JoinError.noAnswer =>
+      'Ninguém na conversa respondeu a tempo. Tente de novo em instantes.',
+    JoinError.tryLater =>
+      'O servidor está ocupado. Tente de novo em instantes.',
     JoinError.unavailable =>
       'Esta versão de teste ainda não consegue entrar em conversas.',
     JoinError.network =>

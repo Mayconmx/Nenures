@@ -16,6 +16,9 @@ analyzer:
     - windows/**
     - macos/**
     - linux/**
+    - rust_builder/**
+    # Gerado pelo flutter_rust_bridge_codegen; não editar à mão.
+    - lib/src/rust/**
 
 linter:
   rules:
