@@ -1,0 +1,14 @@
+# Exceções do `cargo audit`. Cada uma precisa de justificativa e de uma
+# verificação no CI que a desfaça se a situação mudar.
+
+[advisories]
+ignore = [
+    # libcrux-kem 0.0.9: panic com semente ou chave híbrida curta (DoS).
+    # O pacote aparece no Cargo.lock só como dependência OPCIONAL do hpke-rs
+    # 0.7 (feature de libcrux, desligada). Não é compilado no app: o CI
+    # verifica com `cargo tree -i libcrux-kem` e falha se ele passar a entrar.
+    # Correção definitiva: hpke-rs >= 0.8, quando o openmls_rust_crypto adotar.
+    # Revisto em 18/10/2026.
+    "RUSTSEC-2026-0330",
+    "RUSTSEC-2026-0331",
+]

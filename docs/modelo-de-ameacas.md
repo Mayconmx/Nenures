@@ -139,6 +139,7 @@ Probabilidade: baixa / média / alta (qualitativa). Impacto: baixo / médio / al
 - **Mitigação:** versões fixadas, `Cargo.lock`/`pubspec.lock`/`go.sum` no repositório; `cargo audit`, `govulncheck` e verificação de avisos no CI; poucas dependências.
 - **Teste:** jobs de auditoria no CI que falham com aviso conhecido.
 - **Residual:** vulnerabilidades ainda não divulgadas.
+- **Exceções ativas (18/10/2026):** RUSTSEC-2026-0330 e 0331 (`libcrux-kem` 0.0.9, panic/DoS) ignoradas no `cargo audit` porque o pacote só aparece no `Cargo.lock` como dependência opcional desligada do `hpke-rs` 0.7 e não é compilado; o CI falha se ele entrar no build. Justificativa em `app/rust/.cargo/audit.toml`. Aviso informativo: `proc-macro-error2` sem manutenção (usado só na compilação de macros).
 
 ### T15 — Abuso do mecanismo de denúncias
 - **Cenário:** denúncia com conteúdo inventado; enxurrada de denúncias; denúncias usadas para assediar a moderação.
