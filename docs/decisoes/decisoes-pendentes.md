@@ -1,7 +1,22 @@
 # Decisões pendentes D1–D16
 
 Versão 1 · 18/10/2026 · Fase 1
-Estado: **todas pendentes de aprovação**. As recomendações abaixo são propostas, não decisões.
+Estado: **D1–D14 e D17 aprovadas em 18/10/2026** pelo responsável pelo produto, conforme as recomendações deste documento. **D15 e D16 continuam pendentes** (dependem de parecer jurídico; bloqueiam só a publicação).
+
+### Registro de aprovações
+
+| Decisão | Aprovada em | Condições que continuam valendo |
+| --- | --- | --- |
+| D1 | 18/10/2026 | OpenMLS só é adotada se o spike técnico (S1–S6 de revisao-seguranca.md) passar; se falhar, voltar com alternativas (mls-rs) antes de seguir |
+| D2 | 18/10/2026 | Revisão externa obrigatória antes do lançamento público; custo e prestador a definir |
+| D3, D4 | 18/10/2026 | Parâmetros do Argon2id ajustados por medição no aparelho de referência |
+| D5 | 18/10/2026 | Depende de revisão manual da lista e da confirmação da licença |
+| D6 | 18/10/2026 | Resolve o conflito com P5: teto técnico; o número sai da medição (ponto de partida: 50) |
+| D7 | 18/10/2026 | "Trancar entrada" opcional; o padrão de P4 não muda |
+| D8, D9, D10 | 18/10/2026 | Limites finais de D10 definidos após medição |
+| D11 | 18/10/2026 | Sujeita ao parecer sobre o Marco Civil (juridico.md, seção 3) |
+| D12, D13, D14 | 18/10/2026 | — |
+| D17 | 18/10/2026 | Medir o tempo de decodificação no aparelho de referência |
 
 Base técnica: [../revisao-seguranca.md](../revisao-seguranca.md). Ameaças: [../modelo-de-ameacas.md](../modelo-de-ameacas.md).
 

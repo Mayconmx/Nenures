@@ -164,6 +164,8 @@ Contador = número de folhas ocupadas na árvore MLS da época atual. O servidor
 | S5 | Tamanho do APK e memória com 2, 10, 50 participantes | Medido no aparelho de referência. |
 | S6 | Tempo de Argon2id com os parâmetros propostos | ≤ 1,5 s no aparelho de referência. |
 
+**Resultado do spike (18/10/2026, [decisoes/spike-openmls.md](decisoes/spike-openmls.md)):** S1 passou (compila para as 3 ABIs; testes rodados no Android x86_64); S3 e S4 passaram; S2 funciona, mas os vetores oficiais ainda não foram executados; S5 não medido (precisa da API exportada); S6 parcial (379 ms no emulador, falta aparelho ARM).
+
 ---
 
 ## 7. Medições feitas nesta fase
