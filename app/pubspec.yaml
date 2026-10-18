@@ -16,4 +16,26 @@ dev_dependencies:
   flutter_lints: ^6.0.0
 
 flutter:
+  # Os ícones do app vêm de NenuresSymbols (Material Symbols Rounded recortado).
+  # Material Icons fica ligado só porque widgets do framework o usam; o tree-shaking
+  # do build de release reduz a fonte aos poucos glifos efetivamente referenciados.
   uses-material-design: true
+
+  # Fontes empacotadas no app; nada é baixado em tempo de execução.
+  # Origem e licenças: assets/fonts/README.md
+  fonts:
+    - family: BricolageGrotesque
+      fonts:
+        - asset: assets/fonts/BricolageGrotesque-Variable.ttf
+    - family: IBMPlexSans
+      fonts:
+        - asset: assets/fonts/IBMPlexSans-Variable.ttf
+    - family: IBMPlexMono
+      fonts:
+        - asset: assets/fonts/IBMPlexMono-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/IBMPlexMono-Medium.ttf
+          weight: 500
+    - family: NenuresSymbols
+      fonts:
+        - asset: assets/fonts/NenuresSymbols.ttf
