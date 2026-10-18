@@ -8,7 +8,7 @@ import (
 )
 
 func TestHealthz(t *testing.T) {
-	srv := httptest.NewServer(NewHandler())
+	srv := httptest.NewServer(NewHandler(nil))
 	defer srv.Close()
 
 	res, err := http.Get(srv.URL + "/healthz")
@@ -27,7 +27,7 @@ func TestHealthz(t *testing.T) {
 }
 
 func TestUnknownRouteIs404(t *testing.T) {
-	srv := httptest.NewServer(NewHandler())
+	srv := httptest.NewServer(NewHandler(nil))
 	defer srv.Close()
 
 	res, err := http.Get(srv.URL + "/v1")
@@ -41,7 +41,7 @@ func TestUnknownRouteIs404(t *testing.T) {
 }
 
 func TestHealthzRejectsPost(t *testing.T) {
-	srv := httptest.NewServer(NewHandler())
+	srv := httptest.NewServer(NewHandler(nil))
 	defer srv.Close()
 
 	res, err := http.Post(srv.URL+"/healthz", "text/plain", nil)
@@ -55,7 +55,7 @@ func TestHealthzRejectsPost(t *testing.T) {
 }
 
 func TestServerHasTimeouts(t *testing.T) {
-	s := New(":0")
+	s := New(":0", nil)
 	if s.ReadHeaderTimeout == 0 || s.ReadTimeout == 0 || s.WriteTimeout == 0 || s.IdleTimeout == 0 {
 		t.Fatal("todos os timeouts precisam estar definidos")
 	}
