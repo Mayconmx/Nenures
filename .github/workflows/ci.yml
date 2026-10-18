@@ -36,6 +36,14 @@ jobs:
       - run: sh ../tools/check_forbidden_deps.sh pubspec.lock
       - name: build release (assinado com chave de debug até a Fase 9)
         run: flutter build apk --release
+      - name: transporte falso fora do release
+        run: sh ../tools/check_release_apk.sh build/app/outputs/flutter-apk/app-release.apk
+      - name: controle positivo (build da demonstração contém o transporte falso)
+        run: |
+          cp build/app/outputs/flutter-apk/app-release.apk /tmp/release.apk
+          flutter build apk --release -t test/demo/main_demo.dart
+          sh ../tools/check_release_apk.sh --expect build/app/outputs/flutter-apk/app-release.apk
+          sh ../tools/check_release_apk.sh /tmp/release.apk
 
   server:
     runs-on: ubuntu-latest

@@ -31,6 +31,7 @@ ICONS = [
     "content_copy",
     "error",
     "info",
+    "key",
     "lock",
     "qr_code_scanner",
     "send",

@@ -49,7 +49,22 @@ go build -o bin/nenures-server ./cmd/nenures-server
 
 # verificação de dependências proibidas
 sh tools/check_forbidden_deps.sh app/pubspec.lock
+
+# o transporte falso não pode estar no APK de release
+sh tools/check_release_apk.sh app/build/app/outputs/flutter-apk/app-release.apk
 ```
+
+## Demonstração local
+
+O app de release ainda não conversa: a criptografia e o servidor dependem das decisões D1–D14.
+Para navegar pelas telas com um transporte **falso** (sem rede, sem criptografia, só para desenvolvimento):
+
+```sh
+cd app
+flutter run -t test/demo/main_demo.dart
+```
+
+O transporte falso vive em `test/` e o CI falha se ele aparecer no APK de release.
 
 ## Licença
 
