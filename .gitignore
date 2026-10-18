@@ -1,0 +1,22 @@
+# Segredos: nunca versionar
+*.jks
+*.keystore
+key.properties
+*.pem
+*.key
+.env
+.env.*
+
+# Editores e sistema
+.idea/
+*.iml
+.DS_Store
+Thumbs.db
+
+# Go
+server/bin/
+server/*.test
+server/coverage.out
+
+# Rust (Fase 5)
+target/

@@ -1,0 +1,9 @@
+Licenciamento do Nenures (provisório)
+
+- server/  — GNU Affero General Public License v3.0 (ver server/LICENSE).
+- app/     — licença PENDENTE (decisão D15, docs/decisoes/decisoes-pendentes.md).
+             Até a decisão, nenhuma licença é concedida para o código do app.
+- docs/    — segue a licença do servidor até decisão em contrário.
+
+Componentes de terceiros mantêm suas próprias licenças (ver docs/licencas-terceiros.md,
+a ser criado na Fase 3).
