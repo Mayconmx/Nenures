@@ -84,7 +84,7 @@ class EndScreen extends ConsumerWidget {
         Text(body, style: t.bodyMedium!.copyWith(color: c.inkMuted)),
         if (state is Ended) ...[
           const SizedBox(height: NenuresSpace.s3),
-          Text(endLimits, style: context.nText.caption),
+          Text(endLimits, style: t.bodyMedium!.copyWith(color: c.inkMuted)),
         ],
       ],
     );

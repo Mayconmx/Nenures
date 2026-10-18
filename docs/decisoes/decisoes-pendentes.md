@@ -27,6 +27,7 @@ Base técnica: [../revisao-seguranca.md](../revisao-seguranca.md). Ameaças: [..
 | D14 | Fixação de certificado | Não fixar no lançamento | Sim | Fase 6 |
 | D15 | Licença do app | MPL-2.0 (alternativa: GPL-3.0 + CLA) | **Sim — afeta P13** | Fases 9–10 |
 | D16 | Verificação de idade | Sinal de idade da loja, sem documentos; depende de parecer jurídico | **Sim — afeta P1/P11** | Fases 7, 9 |
+| D17 | Leitor de QR | `camera` + `zxing2`, sem ML Kit (que envia dados ao Google) | Sim | Leitura de QR |
 
 ---
 
@@ -150,6 +151,19 @@ Dependências previstas (Flutter BSD-3, OpenMLS MIT, flutter_rust_bridge MIT, Ru
 A Lei 15.211/2025 (ECA Digital) está em vigor desde 17/03/2026, segundo a imprensa; a regulamentação dos métodos de verificação estava pendente de decreto e da ANPD. A lei também prevê que lojas e sistemas operacionais forneçam um "sinal de idade" aos apps. **Opção a avaliar:** consumir o sinal de idade da loja (Google Play e, depois, Apple), sem pedir documento, sem criar conta e sem armazenar o resultado. **Tudo depende de parecer jurídico** (juridico.md); não implementar antes.
 
 ---
+
+### D17 — Leitura do QR pela câmera (nova, 18/10/2026)
+
+O prompt sugere `mobile_scanner`. No Android ele usa o ML Kit do Google, cuja página de divulgação de dados (https://developers.google.com/ml-kit/android-data-disclosure, consultada em 18/10/2026) diz que o SDK coleta informações do aparelho, nomes de pacote, identificadores por instalação e métricas "para diagnóstico e análise de uso", enviados ao Google por HTTPS. A página não descreve como desligar essa coleta. Isso contraria a seção 10.1 (sem analytics nem SDKs de rastreamento) e mudaria o formulário de segurança de dados da Play.
+
+| Opção | Envia dados a terceiros | Observações |
+| --- | --- | --- |
+| `mobile_scanner` 7.4.2 (ML Kit) | Sim | Descartado pelo motivo acima |
+| `flutter_zxing` 3.1.0 (zxing-cpp via FFI, MIT) | Não | Puxa `image_picker` (galeria) e código C++ nativo; mantenedor individual |
+| **`camera` 0.12.1 (flutter.dev, BSD-3) + `zxing2` 0.2.4 (Dart puro, BSD-3)** | Não | Câmera oficial (CameraX); decodificação em Dart, sem código nativo de terceiros. Custo: decodificar quadros em Dart pode ser lento em aparelho barato (medir; processar em baixa resolução a cada ~300 ms) |
+| Sem leitor (só digitação) | Não | Mais simples; pior experiência |
+
+**Recomendação:** `camera` + `zxing2`. Permissão de câmera pedida só ao tocar em "Ler QR code"; nenhum quadro é gravado. **Precisa da sua aprovação.**
 
 ## 4. Aparelho de referência
 

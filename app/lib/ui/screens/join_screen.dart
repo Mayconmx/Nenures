@@ -106,7 +106,7 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
         const SizedBox(height: NenuresSpace.s3),
         Text(
           'Ler o QR code com a câmera chega numa próxima versão.',
-          style: context.nText.caption,
+          style: t.bodyMedium!.copyWith(color: context.nColors.inkMuted),
         ),
       ],
     );

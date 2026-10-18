@@ -25,7 +25,7 @@ class HomeScreen extends ConsumerWidget {
             onPressed: () => Navigator.of(context).push(
               MaterialPageRoute<void>(builder: (_) => const AboutScreen()),
             ),
-            child: Text('Sobre', style: context.nText.caption),
+            child: const Text('Sobre'),
           ),
         ],
       ),
