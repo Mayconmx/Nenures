@@ -207,6 +207,31 @@ void main() {
       expect(conv().phase, ConversationPhase.connected);
     });
 
+    test('trancar: pelo próprio aparelho e por outra pessoa (D7)', () async {
+      await joined();
+      expect(await ctrl().lockEntry(), isTrue);
+      await Future<void>.delayed(Duration.zero);
+      expect(conv().locked, isTrue);
+      expect(conv().items.last.text, SystemText.lockedByMe);
+      expect(await ctrl().lockEntry(), isFalse, reason: 'já trancada');
+      expect(fake.lockCalls, 1);
+    });
+
+    test('aviso de trancamento vindo de outra pessoa', () async {
+      await joined();
+      fake.emit(const EntryLocked(byMe: false));
+      await Future<void>.delayed(Duration.zero);
+      expect(conv().locked, isTrue);
+      expect(conv().items.last.text, SystemText.lockedByOther);
+      // Aviso repetido não duplica a mensagem.
+      fake.emit(const EntryLocked(byMe: false));
+      await Future<void>.delayed(Duration.zero);
+      expect(
+        conv().items.where((i) => i.text == SystemText.lockedByOther),
+        hasLength(1),
+      );
+    });
+
     test('sessão perdida encerra', () async {
       await joined();
       fake.emit(const SessionLost());

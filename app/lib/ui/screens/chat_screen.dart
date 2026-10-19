@@ -30,6 +30,33 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     if (ok) _field.clear();
   }
 
+  /// D7: trancar não tem volta, então pede confirmação.
+  Future<void> _confirmLock(BuildContext context) async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Trancar a entrada?'),
+        content: const Text(
+          'Ninguém novo vai conseguir entrar nesta conversa, nem com a chave. '
+          'Quem já está aqui continua. Não dá para desfazer.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancelar'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Trancar'),
+          ),
+        ],
+      ),
+    );
+    if (ok == true) {
+      await ref.read(conversationProvider.notifier).lockEntry();
+    }
+  }
+
   @override
   void dispose() {
     _field.clear();
@@ -73,10 +100,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                           alignment: WrapAlignment.end,
                           crossAxisAlignment: WrapCrossAlignment.center,
                           children: [
-                            IconButton(
-                              tooltip: 'Mostrar chave',
-                              onPressed: ctrl.showKey,
-                              icon: const Icon(NenuresIcons.key),
+                            _ChatMenu(
+                              locked: s.locked,
+                              onShowKey: ctrl.showKey,
+                              onLock: () => _confirmLock(context),
                             ),
                             EndButton(onConfirmed: ctrl.leave),
                           ],
@@ -204,6 +231,56 @@ class _Composer extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+enum _MenuAction { showKey, lock }
+
+/// Menu da barra do chat: mostrar a chave e trancar a entrada (D7).
+class _ChatMenu extends StatelessWidget {
+  const _ChatMenu({
+    required this.locked,
+    required this.onShowKey,
+    required this.onLock,
+  });
+
+  final bool locked;
+  final VoidCallback onShowKey;
+  final VoidCallback onLock;
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton<_MenuAction>(
+      tooltip: 'Mais opções',
+      icon: const Icon(NenuresIcons.moreVert),
+      onSelected: (a) => switch (a) {
+        _MenuAction.showKey => onShowKey(),
+        _MenuAction.lock => onLock(),
+      },
+      itemBuilder: (context) => [
+        const PopupMenuItem(
+          value: _MenuAction.showKey,
+          child: Row(
+            children: [
+              Icon(NenuresIcons.key),
+              SizedBox(width: NenuresSpace.s3),
+              Text('Mostrar chave'),
+            ],
+          ),
+        ),
+        PopupMenuItem(
+          value: _MenuAction.lock,
+          enabled: !locked,
+          child: Row(
+            children: [
+              const Icon(NenuresIcons.lock),
+              const SizedBox(width: NenuresSpace.s3),
+              Text(locked ? 'Entrada trancada' : 'Trancar entrada'),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

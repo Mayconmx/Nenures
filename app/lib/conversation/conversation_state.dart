@@ -45,6 +45,7 @@ final class InConversation extends ConversationState {
     required this.isCreator,
     this.expiresAt,
     this.showingKey = false,
+    this.locked = false,
   });
 
   final Invite invite;
@@ -62,6 +63,9 @@ final class InConversation extends ConversationState {
   /// Tela "Sua chave" aberta por cima da conversa.
   final bool showingKey;
 
+  /// Entrada trancada (D7): a chave não abre mais esta conversa.
+  final bool locked;
+
   InConversation copyWith({
     ConversationPhase? phase,
     int? participants,
@@ -69,6 +73,7 @@ final class InConversation extends ConversationState {
     DateTime? expiresAt,
     bool clearExpiry = false,
     bool? showingKey,
+    bool? locked,
   }) => InConversation(
     invite: invite,
     phase: phase ?? this.phase,
@@ -77,6 +82,7 @@ final class InConversation extends ConversationState {
     isCreator: isCreator,
     expiresAt: clearExpiry ? null : (expiresAt ?? this.expiresAt),
     showingKey: showingKey ?? this.showingKey,
+    locked: locked ?? this.locked,
   );
 }
 

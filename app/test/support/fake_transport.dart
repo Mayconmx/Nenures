@@ -69,6 +69,14 @@ class FakeConversationTransport implements ConversationTransport {
   @override
   Future<void> leave() async => leaveCalls++;
 
+  int lockCalls = 0;
+
+  @override
+  Future<void> lockEntry() async {
+    lockCalls++;
+    emit(const EntryLocked(byMe: true));
+  }
+
   // --- controles do teste ---
   void emit(TransportEvent e) => _events.add(e);
   void someoneJoins(int count) =>

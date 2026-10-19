@@ -43,8 +43,11 @@ class KeyScreen extends ConsumerWidget {
           ),
           const SizedBox(height: NenuresSpace.s2),
           Text(
-            'Mostre o QR code ou passe as palavras para quem vai conversar '
-            'com você. Quem tiver a chave pode entrar enquanto a conversa existir.',
+            state.locked
+                ? 'A entrada está trancada: esta chave não abre mais a conversa.'
+                : 'Mostre o QR code ou passe as palavras para quem vai conversar '
+                      'com você. Quem tiver a chave pode entrar enquanto a '
+                      'conversa existir.',
             style: t.bodyMedium!.copyWith(color: context.nColors.inkMuted),
           ),
           const SizedBox(height: NenuresSpace.s4),

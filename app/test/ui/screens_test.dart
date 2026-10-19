@@ -246,13 +246,54 @@ void main() {
 
     testWidgets('mostrar a chave a partir do chat', (t) async {
       await pumpChat(t);
-      await tapOn(t, find.byTooltip('Mostrar chave'));
+      await tapOn(t, find.byTooltip('Mais opções'));
+      await t.pumpAndSettle();
+      await t.tap(find.text('Mostrar chave'));
+      await t.pumpAndSettle();
       expect(find.text('Sua chave'), findsOneWidget);
       // Depois que alguém entrou não há validade nem "Cancelar" (P4).
       expect(find.textContaining('expira em'), findsNothing);
       expect(find.text('Cancelar'), findsNothing);
       await tapOn(t, find.text('Abrir conversa'));
       expect(find.text('2 pessoas aqui'), findsOneWidget);
+    });
+
+    testWidgets('trancar entrada pede confirmação e não tem volta (D7)', (
+      t,
+    ) async {
+      final fake = await pumpChat(t);
+      Future<void> openMenu() async {
+        await tapOn(t, find.byTooltip('Mais opções'));
+        await t.pumpAndSettle();
+      }
+
+      await openMenu();
+      await t.tap(find.text('Trancar entrada'));
+      await t.pumpAndSettle();
+      expect(find.text('Trancar a entrada?'), findsOneWidget);
+      await t.tap(find.text('Cancelar').last);
+      await t.pumpAndSettle();
+      expect(fake.lockCalls, 0);
+
+      await openMenu();
+      await t.tap(find.text('Trancar entrada'));
+      await t.pumpAndSettle();
+      await t.tap(find.widgetWithText(FilledButton, 'Trancar'));
+      await t.pumpAndSettle();
+      expect(fake.lockCalls, 1);
+      expect(find.textContaining('Você trancou a entrada'), findsOneWidget);
+
+      await openMenu();
+      final item = t.widget<PopupMenuItem<Object?>>(
+        find.ancestor(
+          of: find.text('Entrada trancada'),
+          matching: find.byWidgetPredicate((w) => w is PopupMenuItem),
+        ),
+      );
+      expect(item.enabled, isFalse);
+      await t.tap(find.text('Mostrar chave'));
+      await t.pumpAndSettle();
+      expect(find.textContaining('não abre mais a conversa'), findsOneWidget);
     });
   });
 }

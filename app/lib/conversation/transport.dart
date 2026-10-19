@@ -26,6 +26,9 @@ abstract interface class ConversationTransport {
 
   /// Sai da conversa e descarta o estado local da sessão.
   Future<void> leave();
+
+  /// Tranca a entrada (D7): ninguém novo entra, nem com a chave. Não tem volta.
+  Future<void> lockEntry();
 }
 
 sealed class TransportEvent {
@@ -63,6 +66,13 @@ final class SessionLost extends TransportEvent {
 /// A chave expirou sem que ninguém entrasse (P3).
 final class RoomExpired extends TransportEvent {
   const RoomExpired();
+}
+
+/// A entrada foi trancada (D7). O aviso vem cifrado pelo MLS, então o
+/// servidor não consegue forjá-lo. [byMe] indica se foi este aparelho.
+final class EntryLocked extends TransportEvent {
+  const EntryLocked({required this.byMe});
+  final bool byMe;
 }
 
 enum JoinFailure {
@@ -121,4 +131,8 @@ class UnavailableTransport implements ConversationTransport {
 
   @override
   Future<void> leave() async {}
+
+  @override
+  Future<void> lockEntry() async =>
+      throw const TransportException(TransportFailure.unavailable);
 }

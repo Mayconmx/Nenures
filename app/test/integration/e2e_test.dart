@@ -182,6 +182,36 @@ void main() {
     },
   );
 
+  test(
+    'trancar entrada: aviso pelo MLS e servidor recusa novos (D7)',
+    () async {
+      final a = client(server), b = client(server);
+      final pa = Probe(a), pb = Probe(b);
+      final invite = await a.createRoom();
+      await b.joinRoom(invite);
+      await pa.next<PresenceChanged>();
+
+      await a.lockEntry();
+      expect((await pa.next<EntryLocked>()).byMe, isTrue);
+      expect((await pb.next<EntryLocked>()).byMe, isFalse);
+
+      await expectLater(
+        client(server).joinRoom(invite),
+        throwsA(
+          isA<JoinException>().having(
+            (e) => e.failure,
+            'failure',
+            JoinFailure.locked,
+          ),
+        ),
+      );
+      await a.leave();
+      await b.leave();
+      await pa.close();
+      await pb.close();
+    },
+  );
+
   test('chave de outra conversa e palavras fora da lista', () async {
     final a = client(server);
     await a.createRoom();

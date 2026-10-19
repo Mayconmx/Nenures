@@ -50,6 +50,11 @@ abstract final class SystemText {
   static const interrupted = 'Conexão perdida. Tentando reconectar…';
   static const restored = 'Conexão restabelecida.';
   static const sendFailed = 'Não foi possível enviar a última mensagem.';
+  static const lockedByMe =
+      'Você trancou a entrada. Ninguém novo pode entrar, nem com a chave.';
+  static const lockedByOther =
+      'Alguém trancou a entrada. Ninguém novo pode entrar, nem com a chave.';
+  static const lockFailed = 'Não foi possível trancar a entrada agora.';
   static String joined(int n) => 'Alguém entrou · $n pessoas';
   static String left(int n) => n == 1
       ? 'A outra pessoa saiu. Só você está aqui.'
@@ -174,6 +179,23 @@ class ConversationController extends Notifier<ConversationState> {
     return true;
   }
 
+  /// Trancar entrada (D7). Retorna false se não deu.
+  Future<bool> lockEntry() async {
+    final s = state;
+    if (s is! InConversation ||
+        s.locked ||
+        s.phase == ConversationPhase.reconnecting) {
+      return false;
+    }
+    try {
+      await _transport.lockEntry();
+      return true;
+    } on TransportException {
+      _add(_system(SystemText.lockFailed));
+      return false;
+    }
+  }
+
   /// Encerrar (dois toques na interface).
   Future<void> leave() => _finish(EndReason.left);
 
@@ -244,6 +266,16 @@ class ConversationController extends Notifier<ConversationState> {
         unawaited(_finish(EndReason.connectionLost));
       case RoomExpired():
         unawaited(_finish(EndReason.expired));
+      case EntryLocked(:final byMe):
+        if (!s.locked) {
+          state = s.copyWith(
+            locked: true,
+            items: [
+              ...s.items,
+              _system(byMe ? SystemText.lockedByMe : SystemText.lockedByOther),
+            ],
+          );
+        }
     }
   }
 

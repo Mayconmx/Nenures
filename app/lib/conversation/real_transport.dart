@@ -156,6 +156,25 @@ class RealTransport implements ConversationTransport {
   }
 
   @override
+  Future<void> lockEntry() async {
+    final s = _session;
+    if (s == null || _ws == null) {
+      throw const TransportException(TransportFailure.network);
+    }
+    final Uint8List ct;
+    try {
+      ct = await s.encryptLock();
+    } on CoreError {
+      throw const TransportException(TransportFailure.network);
+    }
+    // O aviso cifrado chega a todos pelo MLS; o `lock` faz o servidor
+    // recusar novos pedidos de entrada.
+    _send({'t': 'msg', 'data': base64Encode(ct)});
+    _send({'t': 'lock'});
+    _events.add(const EntryLocked(byMe: true));
+  }
+
+  @override
   Future<void> leave() async {
     if (_closing) return;
     _closing = true;
@@ -348,7 +367,7 @@ class RealTransport implements ConversationTransport {
       case IncomingKind.text:
         _events.add(MessageReceived(inc.text!));
       case IncomingKind.lock:
-        break; // "Trancar entrada" na interface: Fase 6 (D7)
+        _events.add(const EntryLocked(byMe: false));
       case IncomingKind.proposal:
         break; // o commit sai em _work, se este aparelho for o designado
       case IncomingKind.commit:

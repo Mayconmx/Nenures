@@ -33,6 +33,7 @@ ICONS = [
     "info",
     "key",
     "lock",
+    "more_vert",
     "qr_code_scanner",
     "send",
     "wifi_off",

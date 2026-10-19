@@ -16,6 +16,7 @@ abstract final class NenuresIcons {
   static const IconData info = IconData(0xe88e, fontFamily: _family);
   static const IconData key = IconData(0xe73c, fontFamily: _family);
   static const IconData lock = IconData(0xe899, fontFamily: _family);
+  static const IconData moreVert = IconData(0xe5d4, fontFamily: _family);
   static const IconData qrCodeScanner = IconData(0xf206, fontFamily: _family);
   static const IconData send = IconData(0xe163, fontFamily: _family);
   static const IconData wifiOff = IconData(0xe648, fontFamily: _family);
