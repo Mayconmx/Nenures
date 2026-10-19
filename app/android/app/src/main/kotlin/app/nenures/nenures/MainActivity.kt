@@ -38,6 +38,7 @@ class MainActivity : FlutterActivity() {
                             result.success(null)
                         }
                     }
+                    "clearIfUnchanged" -> result.success(clearIfUnchanged())
                     else -> result.notImplemented()
                 }
             }
@@ -54,5 +55,35 @@ class MainActivity : FlutterActivity() {
         }
         val manager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         manager.setPrimaryClip(clip)
+        copiedAt = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            manager.primaryClipDescription?.timestamp ?: NONE
+        } else {
+            NONE
+        }
+    }
+
+    // D13: apaga a chave copiada SÓ se a área de transferência ainda for a
+    // mesma cópia. Compara o carimbo de tempo da descrição, sem ler o conteúdo
+    // (ler faria o Android 12+ avisar que o app colou algo). Antes do Android 8
+    // não há carimbo: nada é apagado, para nunca apagar algo copiado depois.
+    private fun clearIfUnchanged(): Boolean {
+        val expected = copiedAt
+        copiedAt = NONE
+        if (expected == NONE || Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return false
+        val manager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val current = manager.primaryClipDescription ?: return false
+        if (current.timestamp != expected) return false
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            manager.clearPrimaryClip()
+        } else {
+            manager.setPrimaryClip(ClipData.newPlainText("", ""))
+        }
+        return true
+    }
+
+    private var copiedAt: Long = NONE
+
+    private companion object {
+        const val NONE = -1L
     }
 }

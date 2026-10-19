@@ -180,7 +180,9 @@ Future<void> copyInviteWithWarning(BuildContext context, Invite invite) async {
       content: const Text(
         'Quem tiver estas palavras pode entrar na conversa. '
         'Outros apps, o teclado e a sincronização da área de transferência '
-        'podem ler o que você copia. Prefira mostrar o QR code.',
+        'podem ler o que você copia. Prefira mostrar o QR code.\n\n'
+        'Depois de 1 minuto, o app tenta apagar a chave da área de '
+        'transferência, se você não tiver copiado outra coisa.',
       ),
       actions: [
         TextButton(

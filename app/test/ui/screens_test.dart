@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nenures/conversation/transport.dart';
+import 'package:nenures/platform/sensitive_clipboard.dart';
 import 'package:nenures/ui/screens/about_screen.dart';
 import 'package:nenures/ui/screens/end_screen.dart';
 
@@ -70,6 +71,10 @@ void main() {
         'abacate abelha abismo absinto acervo achado aceno acesso',
       ]);
       expect(find.text('Chave copiada.'), findsOneWidget);
+      // D13: depois de 1 minuto o app pede a limpeza ao código nativo.
+      await t.pump(SensitiveClipboard.clearAfter);
+      await t.pump();
+      expect(clearRequests(t), 1);
     });
 
     testWidgets('Cancelar volta ao início e sai da sala', (t) async {

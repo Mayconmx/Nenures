@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nenures/app.dart';
 import 'package:nenures/conversation/conversation_controller.dart';
+import 'package:nenures/platform/sensitive_clipboard.dart';
 
 import 'fake_transport.dart';
 
@@ -79,6 +80,11 @@ Future<FakeConversationTransport> pumpChat(
   return fake;
 }
 
+final _clearRequests = <WidgetTester, int>{};
+
+/// Quantas vezes o app pediu a limpeza da área de transferência.
+int clearRequests(WidgetTester t) => _clearRequests[t] ?? 0;
+
 /// Simula o canal nativo de cópia sensível (o caminho usado no Android) e
 /// devolve o que foi copiado por ele.
 List<String> captureClipboard(WidgetTester t) {
@@ -90,6 +96,10 @@ List<String> captureClipboard(WidgetTester t) {
     if (call.method == 'copySensitive') {
       copied.add((call.arguments as Map)['text'] as String);
     }
+    if (call.method == 'clearIfUnchanged') {
+      _clearRequests[t] = (_clearRequests[t] ?? 0) + 1;
+      return true;
+    }
     return null;
   });
   addTearDown(
@@ -98,6 +108,7 @@ List<String> captureClipboard(WidgetTester t) {
       null,
     ),
   );
+  addTearDown(SensitiveClipboard.resetForTest);
   return copied;
 }
 

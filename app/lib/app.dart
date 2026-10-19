@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'conversation/conversation_controller.dart';
 import 'conversation/conversation_state.dart';
 import 'design/theme.dart';
+import 'platform/sensitive_clipboard.dart';
 import 'ui/screens/chat_screen.dart';
 import 'ui/screens/end_screen.dart';
 import 'ui/screens/home_screen.dart';
@@ -65,6 +66,7 @@ class _LifecycleGuardState extends ConsumerState<LifecycleGuard> {
     final ctrl = ref.read(conversationProvider.notifier);
     _listener = AppLifecycleListener(
       onStateChange: (state) {
+        SensitiveClipboard.onLifecycle(state);
         switch (state) {
           case AppLifecycleState.paused:
           case AppLifecycleState.hidden:
