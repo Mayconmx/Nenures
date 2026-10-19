@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nenures/conversation/transport.dart';
 import 'package:nenures/platform/sensitive_clipboard.dart';
+import 'package:nenures/ui/screens/scanner_screen.dart';
 import 'package:nenures/ui/screens/about_screen.dart';
 import 'package:nenures/ui/screens/end_screen.dart';
 
@@ -135,6 +136,25 @@ void main() {
       await tapOn(t, find.text('Entrar'));
       await t.pump();
       expect(find.textContaining('não encontrada ou expirada'), findsOneWidget);
+    });
+
+    testWidgets('Ler QR code sem câmera disponível volta para digitar (D17)', (
+      t,
+    ) async {
+      await pumpApp(t);
+      await openJoin(t);
+      await tapOn(t, find.text('Ler QR code'));
+      await t.pump(const Duration(milliseconds: 400)); // transição da tela
+      await t.pump(ScannerScreen.openTimeout);
+      await t.pump();
+      expect(find.text('Ler QR code'), findsOneWidget); // título da tela
+      expect(
+        find.textContaining('Não foi possível abrir a câmera'),
+        findsOneWidget,
+      );
+      await tapOn(t, find.text('Digitar as palavras'));
+      await t.pumpAndSettle();
+      expect(find.text('Entrar com chave'), findsOneWidget);
     });
 
     testWidgets('chave válida abre o chat com a contagem validada', (t) async {

@@ -112,7 +112,7 @@ Probabilidade: baixa / média / alta (qualitativa). Impacto: baixo / médio / al
 - **Cenário:** convite copiado fica na área de transferência, sincronizada com outros aparelhos ou lida por outros apps/teclados.
 - **Impacto:** alto (equivale a T3).
 - **Probabilidade:** média.
-- **Mitigação:** aviso ao copiar; marcação sensível (Android 13+); limpeza condicional (D13); aprendizado do teclado desligado nos campos.
+- **Mitigação:** aviso ao copiar; marcação sensível (Android 13+); limpeza após 60 s só se a área de transferência ainda tiver a mesma cópia, comparando o carimbo de tempo sem ler o conteúdo (D13, Android 8+); aprendizado do teclado desligado nos campos.
 - **Teste:** copiar → verificar marcação; limpeza só quando o conteúdo ainda é o convite.
 - **Residual:** limpeza não garantida; teclados de terceiros podem registrar o que é digitado.
 

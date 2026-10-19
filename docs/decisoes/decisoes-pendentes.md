@@ -178,7 +178,9 @@ O prompt sugere `mobile_scanner`. No Android ele usa o ML Kit do Google, cuja p�
 | **`camera` 0.12.1 (flutter.dev, BSD-3) + `zxing2` 0.2.4 (Dart puro, BSD-3)** | Não | Câmera oficial (CameraX); decodificação em Dart, sem código nativo de terceiros. Custo: decodificar quadros em Dart pode ser lento em aparelho barato (medir; processar em baixa resolução a cada ~300 ms) |
 | Sem leitor (só digitação) | Não | Mais simples; pior experiência |
 
-**Recomendação:** `camera` + `zxing2`. Permissão de câmera pedida só ao tocar em "Ler QR code"; nenhum quadro é gravado. **Precisa da sua aprovação.**
+**Recomendação:** `camera` + `zxing2`. Permissão de câmera pedida só ao tocar em "Ler QR code"; nenhum quadro é gravado.
+
+**Implementação (19/10/2026):** `camera` 0.12.1 + `zxing2` 0.2.4, decodificação do plano Y em isolate a cada 300 ms. O plugin `camera` acrescenta `RECORD_AUDIO` e permissões de arquivos ao manifesto: removidas com `tools:node="remove"`; câmera marcada como opcional. O CI recusa qualquer permissão fora da lista (`tools/check_permissions.sh`). Verificado no emulador: pedido de permissão só ao tocar; câmera abre depois da permissão. Leitura óptica real de QR: pendente de aparelho físico (a câmera virtual do emulador não pôde ser apontada por linha de comando).
 
 ## 4. Aparelho de referência
 

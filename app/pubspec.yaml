@@ -7,6 +7,7 @@ environment:
   sdk: ^3.13.0
 
 dependencies:
+  camera: 0.12.1
   clock: 1.1.2
   flutter:
     sdk: flutter
@@ -15,6 +16,7 @@ dependencies:
   nenures_core:
     path: rust_builder
   qr: 4.0.0
+  zxing2: 0.2.4
 
 dev_dependencies:
   flutter_test:

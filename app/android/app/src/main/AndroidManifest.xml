@@ -1,6 +1,19 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Única permissão do app: falar com o servidor (WSS). -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <!-- Permissões do app (lista fechada; o CI recusa qualquer outra: tools/check_permissions.sh). -->
+    <!-- Falar com o servidor (WSS). -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Leitor de QR (D17): só a câmera, pedida ao tocar em "Ler QR code". -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- Câmera opcional: o app funciona digitando as palavras. -->
+    <uses-feature android:name="android.hardware.camera.any" android:required="false"
+        tools:replace="android:required" />
+
+    <!-- O plugin de câmera acrescenta estas permissões; o app não as usa
+         (sem microfone nem arquivos, seção 10.1 do prompt). -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" tools:node="remove" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:node="remove" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" tools:node="remove" />
     <application
         android:label="nenures"
         android:name="${applicationName}"

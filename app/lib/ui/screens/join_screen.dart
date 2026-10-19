@@ -4,9 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../conversation/conversation_controller.dart';
 import '../../conversation/conversation_state.dart';
 import '../../conversation/invite.dart';
+import '../../design/nenures_icons.dart';
 import '../../design/theme.dart';
 import '../../design/tokens.dart';
 import '../widgets/frame.dart';
+import 'scanner_screen.dart';
 
 class JoinScreen extends ConsumerStatefulWidget {
   const JoinScreen({super.key});
@@ -52,6 +54,15 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
     } else {
       setState(() => _error = message(err));
     }
+  }
+
+  /// D17: câmera só ao tocar; o QR traz as mesmas palavras da chave.
+  Future<void> _scan() async {
+    final invite = await Navigator.of(context)
+        .push<Invite>(MaterialPageRoute(builder: (_) => const ScannerScreen()));
+    if (invite == null || !mounted) return;
+    _field.text = invite.text;
+    await _submit();
   }
 
   @override
@@ -110,9 +121,13 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
           ),
         ),
         const SizedBox(height: NenuresSpace.s3),
-        Text(
-          'Ler o QR code com a câmera chega numa próxima versão.',
-          style: t.bodyMedium!.copyWith(color: context.nColors.inkMuted),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: OutlinedButton.icon(
+            onPressed: joining ? null : _scan,
+            icon: const Icon(NenuresIcons.qrCodeScanner),
+            label: const Text('Ler QR code'),
+          ),
         ),
       ],
     );
